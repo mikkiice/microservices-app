@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+</head>
+<body>
+<h1>Вход в систему</h1>
+<input type="text" id="login" placeholder="Логин"><br>
+<input type="password" id="password" placeholder="Пароль"><br>
+<button onclick="login()">Войти</button>
+
+<hr>
+
+<h2>Мои данные</h2>
+<button onclick="getMe()">Получить /me</button>
+<pre id="output"></pre>
+
+<script>
+    async function login() {
+        const login = document.getElementById('login').value;
+        const password = document.getElementById('password').value;
+
+        const res = await fetch('http://localhost:8081/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ login, password })
+        });
+
+        if (res.ok) {
+            const token = await res.text();
+            localStorage.setItem('token', token);
+            alert("Успешный вход!");
+        } else {
+            alert("Ошибка входа");
+        }
+    }
+
+    async function getMe() {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:8081/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const output = document.getElementById('output');
+        if (res.ok) {
+            const data = await res.json();
+            output.textContent = JSON.stringify(data, null, 2);
+        } else {
+            output.textContent = "Ошибка доступа: " + res.status;
+        }
+    }
+</script>
+</body>
+</html>

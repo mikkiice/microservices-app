@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: http://user-service:8081
+          predicates:
+            - Path=/users/**
+        - id: bad-words-service
+          uri: http://bad-words-service:8085
+          predicates:
+            - Path=/badwords/**
+server:
+  port: 8080
