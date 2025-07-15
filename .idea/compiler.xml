@@ -13,15 +13,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="config-server" />
-      </profile>
-      <profile name="Annotation profile for microservices-app" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
         <module name="bad-words-service" />
+        <module name="post-service" />
         <module name="user-service" />
       </profile>
     </annotationProcessing>
@@ -31,6 +24,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="bad-words-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="post-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

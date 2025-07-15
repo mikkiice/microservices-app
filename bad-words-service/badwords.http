@@ -1,0 +1,19 @@
+GET http://localhost:8085/bad-words
+###
+GET http://localhost:8085/bad-words/exist?badWord=тварь
+###
+POST http://localhost:8085/bad-words
+Content-Type: application/json
+
+{
+  "word": "мерзость"
+}
+###
+POST http://localhost:8085/bad-words
+Content-Type: application/json
+
+{
+"word": "тварь"
+}
+###
+DELETE http://localhost:8085/bad-words?badWord=тварь

@@ -31,7 +31,7 @@ services:
     ports:
       - "8888:8888"
     volumes:
-          - ./config-repo:/app/config-repo
+      - ./config-repo:/app/config-repo
     networks:
       - app-network
     healthcheck:
@@ -71,6 +71,25 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8085/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  post-service:
+    build: ./post-service
+    container_name: post-service
+    restart: always
+    ports:
+      - "8086:8086"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     networks:
       - app-network
     healthcheck:

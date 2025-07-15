@@ -1,10 +1,10 @@
-package com.example.bad_words_service;
+package com.example.post_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BadWordsServiceApplicationTests {
+class PostServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
