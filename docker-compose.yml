@@ -52,6 +52,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+      discovery-server:
+        condition: service_started
     networks:
       - app-network
     healthcheck:
@@ -59,6 +61,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
 
   bad-words-service:
     build: ./bad-words-service
@@ -71,6 +74,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      discovery-server:
+        condition: service_started
     networks:
       - app-network
     healthcheck:
@@ -78,6 +83,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
+    environment:
+      - SPRING_APPLICATION_NAME=bad-words-service
+      - SPRING_PROFILES_ACTIVE=default
+
 
   post-service:
     build: ./post-service
@@ -90,13 +100,19 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+      discovery-server:
+        condition: service_started
     networks:
       - app-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8085/actuator/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8086/actuator/health" ]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 15s
+    environment:
+      - SPRING_APPLICATION_NAME=post-service
+
 
 
   api-gateway:
@@ -111,6 +127,8 @@ services:
         condition: service_healthy
       bad-words-service:
         condition: service_healthy
+      discovery-server:
+          condition: service_started
     networks:
       - app-network
     healthcheck:
@@ -118,6 +136,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  discovery-server:
+    build: ./discovery-server
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - app-network
+    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
 
 
 volumes:

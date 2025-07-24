@@ -13,9 +13,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="config-server" />
-        <module name="bad-words-service" />
         <module name="post-service" />
+        <module name="bad-words-service" />
         <module name="user-service" />
+        <module name="discovery-server" />
       </profile>
     </annotationProcessing>
   </component>
@@ -24,6 +25,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="bad-words-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="discovery-server" options="-parameters" />
       <module name="post-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>

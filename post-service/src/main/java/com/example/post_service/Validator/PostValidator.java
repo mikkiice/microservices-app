@@ -5,6 +5,7 @@ import com.example.post_service.Exceptions.PostRejectException;
 import com.example.post_service.Feign.BadWordsClient;
 import com.example.post_service.Model.DTO.PostRequest;
 import com.example.post_service.Model.DTO.PostStatus;
+import com.example.post_service.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class PostValidator {
 
     private final BadWordsClient badWordsClient;
+    private final PostRepository postRepository;
 
     @Value("${post.max-length}")
     private int maxLength;
@@ -29,5 +31,11 @@ public class PostValidator {
             throw new PostRejectException("Content exist bad words", PostStatus.REJECTED, "badWordsError");
         }
 
+    }
+
+    public void validateUserHasPosts(Long userId) {
+        if(postRepository.findFirstByUserId(userId).isEmpty()) {
+            throw new PostRejectException("User does not exist", PostStatus.REJECTED, "userIdError");
+        }
     }
 }

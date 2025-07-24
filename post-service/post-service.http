@@ -1,0 +1,26 @@
+### 1. Создать пост — валидный
+POST http://localhost:8082/posts
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "title": "Первый пост",
+  "content": "Это нормальный пост без мата"
+}
+
+
+### 3. Создать пост — с запрещёнными словами
+POST http://localhost:8082/posts
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "title": "Мат-пост",
+  "content": "Ты козёл"
+}
+
+### 4. Получить посты пользователя — когда есть посты
+GET http://localhost:8082/posts/user/1
+
+### 5. Получить посты пользователя — когда постов нет
+GET http://localhost:8082/posts/user/999

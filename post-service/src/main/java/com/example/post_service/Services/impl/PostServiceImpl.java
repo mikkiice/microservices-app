@@ -13,7 +13,6 @@ import com.example.post_service.Validator.PostValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,10 +32,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse createPost(PostRequest postRequest) {
 
+        LocalDateTime now = LocalDateTime.now();
         try {
             postValidator.validate(postRequest);
         } catch (PostRejectException e) {
-            sendAnalytic(postRequest, null, PostStatus.REJECTED, e.getReason());
+            Post rejectedPost = new Post();
+            rejectedPost.setContent(postRequest.getContent());
+            rejectedPost.setUserId(postRequest.getUserId());
+            rejectedPost.setTitle(postRequest.getTitle());
+            rejectedPost.setCreatedAt(now);
+            rejectedPost.setUpdatedAt(now);
+            rejectedPost.setStatus(PostStatus.REJECTED);
+
+            Post savedRejectedPost = postRepository.save(rejectedPost);
+            sendAnalytic(postRequest, savedRejectedPost.getId(), PostStatus.REJECTED, e.getReason());
             throw e;
         }
 
@@ -44,9 +53,9 @@ public class PostServiceImpl implements PostService {
         post.setContent(postRequest.getContent());
         post.setUserId(postRequest.getUserId());
         post.setTitle(postRequest.getTitle());
-        post.setCreatedAt(LocalDateTime.now());
+        post.setCreatedAt(now);
         post.setStatus(PostStatus.PUBLISHED);
-        post.setUpdatedAt(LocalDateTime.now());
+        post.setUpdatedAt(now);
 
         Post savedPost = postRepository.save(post);
 
@@ -58,7 +67,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponse> getPostsByUser(Long userId) {
-
+        postValidator.validateUserHasPosts(userId);
         return postRepository.findAllByUserId(userId)
                 .stream()
                 .map(post -> modelMapper.map(post, PostResponse.class))
