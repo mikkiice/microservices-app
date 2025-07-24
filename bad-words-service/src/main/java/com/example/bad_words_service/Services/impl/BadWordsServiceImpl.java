@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class BadWordsServiceImpl implements BadWordsService {
     @Override
     public boolean isBadWord(String word) {
 
-        return badWordsRepository.existsByWord(word);
+        return Arrays.stream(word.toLowerCase().split("[^\\p{L}]+")).anyMatch(badWordsRepository::existsByWord);
     }
 
     @Transactional

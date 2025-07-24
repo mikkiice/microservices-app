@@ -1,0 +1,38 @@
+# Maven target директории (сборочные артефакты)
+**/target/
+
+# Логи
+*.log
+
+# IntelliJ IDEA
+/.idea/
+/*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Конфигурации локальных окружений (секреты, пароли)
+.env
+*.env
+
+# Docker overrides и локальные кастомизации, которые не обязательны
+docker-compose.override.yml
+
+# Файлы с сгенерированными Java классами (если есть)
+*.class
+
+# Spring Boot specific (если jar файлы не хранятся в репозитории)
+*.jar
+
+# Temporary files
+*.tmp
