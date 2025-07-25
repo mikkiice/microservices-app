@@ -23,6 +23,7 @@
         <module>bad-words-service</module>
         <module>post-service</module>
         <module>discovery-server</module>
+        <module>analytic-service</module>
     </modules>
 
     <properties>
