@@ -114,6 +114,29 @@ services:
       - SPRING_APPLICATION_NAME=post-service
 
 
+  analytic-service:
+    build: ./analytic-service
+    container_name: analytic-service
+    ports:
+      - "8089:8089"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8089/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - SPRING_APPLICATION_NAME=analytic-service
+      - SPRING_PROFILES_ACTIVE=default
+
 
   api-gateway:
     build: ./api-gateway
