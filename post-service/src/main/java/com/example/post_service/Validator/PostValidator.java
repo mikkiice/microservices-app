@@ -24,7 +24,7 @@ public class PostValidator {
 
         String content = postRequest.getContent();
         if (content.length() > maxLength) {
-            throw new PostRejectException("Content is too long", PostStatus.REJECTED, "maxLengthError");
+            throw new PostRejectException("Content is too long", PostStatus.REJECTED, "length");
         }
 
         if(badWordsClient.exist(postRequest.getContent())) {

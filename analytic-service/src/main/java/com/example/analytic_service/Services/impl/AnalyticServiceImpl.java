@@ -6,16 +6,14 @@ import com.example.analytic_service.entity.DTO.AnalyticResponse;
 import com.example.analytic_service.Services.AnalyticService;
 import com.example.analytic_service.entity.DTO.AnalyticsEventDto;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class AnalyticServiceImpl implements AnalyticService {
 
-    private final ModelMapper modelMapper;
     private final AnalyticCalc analyticCalc;
     private final AnalyticRepository analyticRepository;
 
@@ -26,10 +24,15 @@ public class AnalyticServiceImpl implements AnalyticService {
 
     @Override
     public void saveEvent(AnalyticsEventDto event) {
-        Optional.of(event)
-                .map(d -> modelMapper.map(d, AnalyticsEventEntity.class))
-                .ifPresent(analyticRepository::save);
+        AnalyticsEventEntity entity = new AnalyticsEventEntity();
+        entity.setUserId(event.getUserId());
+        entity.setPostId(event.getPostId());
+        entity.setPostStatus(event.getPostStatus());
+        entity.setReason(event.getReason());
+
+        analyticRepository.save(entity);
     }
+
 
 
 

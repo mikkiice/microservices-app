@@ -13,8 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class AnalyticCalc {
 
-    public AnalyticResponse calc(List<AnalyticsEventEntity> eventList)
-    {
+    public AnalyticResponse calc(List<AnalyticsEventEntity> eventList) {
         long totalPosts = eventList.size();
         long totalPublishedPosts = countByStatus(eventList, PostStatus.PUBLISHED);
         long totalRejectedPosts = countByStatus(eventList, PostStatus.REJECTED);
@@ -22,7 +21,6 @@ public class AnalyticCalc {
         List<AnalyticsEventEntity> rejectedEventList = filterByStatus(eventList, PostStatus.REJECTED);
         Map<RejectionReason, Long> rejectionStats = groupByRejectionReason(rejectedEventList);
         Map.Entry<String, Long> topBadWordEntry = findTopBadWord(rejectedEventList);
-
 
 
         return buildResponse(
@@ -35,37 +33,33 @@ public class AnalyticCalc {
 
     }
 
-    private long countByStatus(List<AnalyticsEventEntity> eventList, PostStatus postStatus)
-    {
+    private long countByStatus(List<AnalyticsEventEntity> eventList, PostStatus postStatus) {
         return eventList.stream()
-                .filter(e -> e.getPostStatus() == postStatus)
+                .filter(e -> e.getPostStatus() != null && e.getPostStatus().equals(postStatus))
                 .count();
     }
 
-    private List<AnalyticsEventEntity> filterByStatus(List<AnalyticsEventEntity> eventList, PostStatus postStatus)
-    {
-        return eventList.stream().filter(e -> e.getPostStatus() == postStatus)
+    private List<AnalyticsEventEntity> filterByStatus(List<AnalyticsEventEntity> eventList, PostStatus postStatus) {
+        return eventList.stream()
+                .filter(e -> e.getPostStatus() != null && e.getPostStatus().equals(postStatus))
                 .toList();
     }
 
-    private Map<RejectionReason, Long> groupByRejectionReason(List<AnalyticsEventEntity> rejectedEventList)
-    {
+    private Map<RejectionReason, Long> groupByRejectionReason(List<AnalyticsEventEntity> rejectedEventList) {
         return rejectedEventList.stream()
                 .map(this::mapToReasonEnum)
                 .collect(Collectors.groupingBy(reason -> reason, Collectors.counting()));
     }
 
-    private RejectionReason mapToReasonEnum(AnalyticsEventEntity rejectedEvent)
-    {
+    private RejectionReason mapToReasonEnum(AnalyticsEventEntity rejectedEvent) {
         String reason = rejectedEvent.getReason();
-        if("length".equalsIgnoreCase(reason)) {
+        if ("length".equalsIgnoreCase(reason)) {
             return RejectionReason.LENGTH;
         }
         return RejectionReason.BAD_WORD;
     }
 
-    private Map.Entry<String, Long> findTopBadWord(List<AnalyticsEventEntity> rejectedEventList)
-    {
+    private Map.Entry<String, Long> findTopBadWord(List<AnalyticsEventEntity> rejectedEventList) {
         return rejectedEventList.stream()
                 .map(AnalyticsEventEntity::getReason)
                 .filter(reason -> reason != null && reason.startsWith("badword:"))
