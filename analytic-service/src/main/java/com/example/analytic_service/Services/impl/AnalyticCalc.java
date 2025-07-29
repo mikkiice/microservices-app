@@ -62,7 +62,7 @@ public class AnalyticCalc {
     private Map.Entry<String, Long> findTopBadWord(List<AnalyticsEventEntity> rejectedEventList) {
         return rejectedEventList.stream()
                 .map(AnalyticsEventEntity::getReason)
-                .filter(reason -> reason != null && reason.startsWith("badword:"))
+                .filter(reason -> reason != null && reason.contains("Content exist bad words:"))
                 .collect(Collectors.groupingBy(w -> w, Collectors.counting()))
                 .entrySet().stream()
                 .max(Map.Entry.comparingByValue())

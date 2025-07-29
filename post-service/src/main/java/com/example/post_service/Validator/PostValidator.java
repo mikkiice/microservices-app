@@ -28,7 +28,7 @@ public class PostValidator {
         }
 
         if(badWordsClient.exist(postRequest.getContent())) {
-            throw new PostRejectException("Content exist bad words", PostStatus.REJECTED, "badWordsError");
+            throw new PostRejectException("Content exist bad words:" + postRequest.getContent(), PostStatus.REJECTED, "badWordsError");
         }
 
     }
